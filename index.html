@@ -7,6 +7,8 @@
 	<!-- Styles -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" href="style.css" />
+
+	<script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
 </head>
 
 <body ng-app="todoApp">
@@ -30,8 +32,8 @@
 	            <h4>My Todos</h4>
 
 	            <ul ng-cloak>
-	            	<li ng-repeat="todo in todos" ng-class="{done: todo.done}">
-	            		{{todo.text}} <small>{{todo.timestamp | fromNow}} <a ng-click="completeTodo(todo)">complete</a></small>
+	            	<li ng-repeat="item in todos" ng-class="{done: item.done}">
+	            		<todo item="item"></todo>
 	            	</li>
 	            </ul>
 	        </div>

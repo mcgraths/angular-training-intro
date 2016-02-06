@@ -3,20 +3,12 @@
 /*
 *   Angular App 
 */
+var ref = new Firebase("https://torrid-fire-6609.firebaseio.com/todos");
 var todoApp = angular.module('todoApp', []);
 
-todoApp.controller('todoController', function($scope){
+todoApp.controller('todoController', function($scope, todoApi){
 	$scope.todoText = '';
-	$scope.todos = [{
-		text: 'Get the milk',
-		timestamp: Date.now(),
-		done: false
-	},
-	{
-		text: 'Learn Angular',
-		timestamp: Date.now(),
-		done: false
-	}];
+	$scope.todos = [];
 
 
 	$scope.addTodo = function(){
@@ -28,20 +20,40 @@ todoApp.controller('todoController', function($scope){
 			done: false
 		};
 
-		$scope.todos.push(todo);
 		$scope.todoText = '';
 
 		
 		console.log($scope.todos);
+
+		todoApi.newTodo(todo);
 	};
 
-	$scope.completeTodo = function(todo) {
-		todo.done = true;
-		console.log($scope.todos);
-	};
+	ref.on("child_added", function(snapshot) {
+	    console.log(snapshot.val());  
+	    
+	    $scope.$apply(function () {
+            $scope.todos.push(snapshot.val());
+        });
+	    
+	});
 
-}); 	 		
+}); 	
 
+todoApp.directive('todo', function() {
+  return {
+    restrict: 'E', //directive is for element only <todo></todo>
+    scope: {
+      todo: '=item' //bind scope to the 'info' attribute of the element
+    },
+    controller: ['$scope', 'todoApi', function($scope, todoApi) {
+    	$scope.completeTodo = function(todo) {
+			todo.done = true;
+			console.log($scope.todos);
+		};
+    }],
+    templateUrl: 'templates/todo.html' //html template file
+  };
+});
 
 todoApp.filter('fromNow', function() {
     return function(input) {
@@ -50,3 +62,13 @@ todoApp.filter('fromNow', function() {
       /* jshint ignore:end */
     };
 });
+
+todoApp.factory('todoApi', ['$http', function($http) {
+
+		return {
+			newTodo: function(todo) {
+				ref.push().set(todo);
+			}
+		};
+
+	}]);
