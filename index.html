@@ -31,7 +31,7 @@
 
 	            <ul ng-cloak>
 	            	<li ng-repeat="todo in todos" ng-class="{done: todo.done}">
-	            		{{todo.text}} <small>{{todo.timestamp | date: "h:mm:ss a"}} <a ng-click="completeTodo(todo)">complete</a></small>
+	            		{{todo.text}} <small>{{todo.timestamp | fromNow}} <a ng-click="completeTodo(todo)">complete</a></small>
 	            	</li>
 	            </ul>
 	        </div>
@@ -39,6 +39,7 @@
 	</div><!-- /container -->
 
 	<!-- Scripts -->
+	<script src='/bower_components/moment/moment.js'></script>
 	<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js'></script>
 	<script src="app.js"></script>
 </body>

@@ -41,3 +41,12 @@ todoApp.controller('todoController', function($scope){
 	};
 
 }); 	 		
+
+
+todoApp.filter('fromNow', function() {
+    return function(input) {
+      /* jshint ignore:start */
+      return moment(input).fromNow();
+      /* jshint ignore:end */
+    };
+});
