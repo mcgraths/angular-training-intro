@@ -9,6 +9,7 @@ var todoApp = angular.module('todoApp', []);
 todoApp.controller('todoController', function($scope, todoApi){
 	$scope.todoText = '';
 	$scope.todos = [];
+	$scope.dataLoaded = false;
 
 
 	$scope.addTodo = function(){
@@ -21,20 +22,21 @@ todoApp.controller('todoController', function($scope, todoApi){
 		};
 
 		$scope.todoText = '';
-
+		$scope.todos.push(todo);
 		
 		console.log($scope.todos);
 
+		$scope.dataLoaded = true;
 		todoApi.newTodo(todo);
 	};
 
 	ref.on("child_added", function(snapshot) {
 	    console.log(snapshot.val());  
 	    
-	    $scope.$apply(function () {
-            $scope.todos.push(snapshot.val());
-        });
-	    
+	    if(!$scope.dataLoaded)
+		    $scope.$apply(function () {
+	            $scope.todos.push(snapshot.val());
+	        });    
 	});
 
 }); 	
@@ -48,7 +50,6 @@ todoApp.directive('todo', function() {
     controller: ['$scope', 'todoApi', function($scope, todoApi) {
     	$scope.completeTodo = function(todo) {
 			todo.done = true;
-			console.log($scope.todos);
 		};
     }],
     templateUrl: 'templates/todo.html' //html template file
